@@ -1,0 +1,91 @@
+resources:
+  - name: same_gitRepo1
+    type: GitRepo
+    configuration:
+      gitProvider: testInt
+      path: akhilesh073/TestYmlPipeline
+      branches:
+        include: master
+
+  - name: gitRepo_githubhttps
+    type: GitRepo
+    configuration:
+      gitProvider: testInt
+      path: akhilesh073/xray-pipelines-repo
+      cloneProtocol: https
+      branches:
+        include: main
+
+  - name: versionbag
+    type: PropertyBag
+    configuration:
+      version: '1.0.0'
+
+  - name: branchbag
+    type: PropertyBag
+    configuration:
+      branch_name: ''
+
+  - name: pipelineVBag
+    type: PropertyBag
+    configuration:
+      pipeline_v: ''
+
+pipelines:
+  - name: simplePipelines1
+    steps:
+      - name: simpleBash1
+        type: Bash
+        configuration:
+          #           timeoutSeconds: 60
+          inputResources:
+            - name: same_gitRepo1
+            - name: gitRepo_githubhttps
+          outputResources:
+            - name: versionbag
+            - name: branchbag
+            - name: pipelineVBag
+        execution:
+          onExecute:
+            - printenv
+            #             - sleep 3m
+            - echo "aaa bbb ccc"
+            - write_output versionbag "version=$run_id"
+            - write_output branchbag "branch_name=$run_id"
+            - write_output pipelineVBag "pipeline_v=$run_id"
+
+      - name: simpleBash2
+        type: Bash
+        configuration:
+          inputSteps:
+            - name: simpleBash1
+          inputResources:
+            - name: same_gitRepo1
+            - name: gitRepo_githubhttps
+        execution:
+          onExecute:
+            - printenv
+      - name: simpleBash_abc
+        type: Bash
+        configuration:
+          inputSteps:
+            - name: simpleBash1
+          inputResources:
+            - name: same_gitRepo1
+            - name: gitRepo_githubhttps
+        execution:
+          onExecute:
+            - printenv
+      - name: simpleBash4
+        type: Bash
+        configuration:
+          inputSteps:
+            - name: simpleBash1
+            - name: simpleBash2
+          inputResources:
+            - name: versionbag
+            - name: gitRepo_githubhttps
+            - name: same_gitRepo1
+        execution:
+          onExecute:
+            - printenv
