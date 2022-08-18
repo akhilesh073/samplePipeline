@@ -1,5 +1,5 @@
 resources:
-  - name: same_gitRepo1
+  - name: same_gitRepo2
     type: GitRepo
     configuration:
       gitProvider: testInt
@@ -7,7 +7,7 @@ resources:
       branches:
         include: master
 
-  - name: gitRepo_githubhttps
+  - name: gitRepo_githubhttp
     type: GitRepo
     configuration:
       gitProvider: testInt
@@ -16,17 +16,17 @@ resources:
       branches:
         include: main
 
-  - name: versionbag
+  - name: versionbag1
     type: PropertyBag
     configuration:
       version: '1.0.0'
 
-  - name: branchbag
+  - name: branchbag1
     type: PropertyBag
     configuration:
       branch_name: ''
 
-  - name: pipelineVBag
+  - name: pipelineVBag1
     type: PropertyBag
     configuration:
       pipeline_v: ''
@@ -39,20 +39,20 @@ pipelines:
         configuration:
           #           timeoutSeconds: 60
           inputResources:
-            - name: same_gitRepo1
-            - name: gitRepo_githubhttps
+            - name: same_gitRepo2
+            - name: gitRepo_githubhttp
           outputResources:
-            - name: versionbag
-            - name: branchbag
-            - name: pipelineVBag
+            - name: versionbag1
+            - name: branchbag1
+            - name: pipelineVBag1
         execution:
           onExecute:
             - printenv
             #             - sleep 3m
             - echo "aaa bbb ccc"
-            - write_output versionbag "version=$run_id"
-            - write_output branchbag "branch_name=$run_id"
-            - write_output pipelineVBag "pipeline_v=$run_id"
+            - write_output versionbag1 "version=$run_id"
+            - write_output branchbag1 "branch_name=$run_id"
+            - write_output pipelineVBag1 "pipeline_v=$run_id"
 
       - name: simpleBash2
         type: Bash
@@ -60,8 +60,8 @@ pipelines:
           inputSteps:
             - name: simpleBash1
           inputResources:
-            - name: same_gitRepo1
-            - name: gitRepo_githubhttps
+            - name: same_gitRepo2
+            - name: gitRepo_githubhttp
         execution:
           onExecute:
             - printenv
@@ -71,8 +71,8 @@ pipelines:
           inputSteps:
             - name: simpleBash1
           inputResources:
-            - name: same_gitRepo1
-            - name: gitRepo_githubhttps
+            - name: same_gitRepo2
+            - name: gitRepo_githubhttp
         execution:
           onExecute:
             - printenv
@@ -83,9 +83,9 @@ pipelines:
             - name: simpleBash1
             - name: simpleBash2
           inputResources:
-            - name: versionbag
-            - name: gitRepo_githubhttps
-            - name: same_gitRepo1
+            - name: versionbag1
+            - name: gitRepo_githubhttp
+            - name: same_gitRepo2
         execution:
           onExecute:
             - printenv
